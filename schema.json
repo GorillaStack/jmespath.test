@@ -2,33 +2,48 @@
     "type": "array",
     "items": {
         "type": "object",
-	"additionalProperties": "false",
+        "additionalProperties": false,
         "properties": {
-            "given": {},
+            "given": { "type": ["object", "string", "array", "number", "boolean", "null"] },
             "comment": {"type": "string"},
             "cases": {
                 "type": "array",
                 "items": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                        "expression": {"type": "string"},
-                        "result": {},
-                        "error": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "expression": { "type": "string" },
+                          "result": { "type": ["object", "string", "array", "number", "boolean", "null"] },
+                          "comment": {"type": "string"}
+                        },
+                        "required": ["expression", "result"]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "expression": { "type": "string" },
+                          "error": {
                             "enum": ["invalid-arity", "invalid-type",
                                      "invalid-value", "syntax",
                                      "unknown-function"]
+                          },
+
+                          "comment": {"type": "string"}
                         },
-                        "bench": {
-                            "enum": ["parse", "interpret", "full"]
+                        "required": ["expression", "error"]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "expression": { "type": "string" },
+                          "bench": {
+                              "enum": ["parse", "interpret", "full"]
+                          },
+                          "comment": {"type": "string"}
                         },
-                        "comment": {"type": "string"}
-                    },
-                    "required": ["expression"],
-                    "anyOf": [
-                        {"required": ["result"]},
-                        {"required": ["error"]},
-                        {"required": ["bench"]}
+                        "required": ["expression", "comment"]
+                      }
                     ]
                 }
             }
